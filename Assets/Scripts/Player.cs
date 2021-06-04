@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    float moveSpeed = 5;
+    void Movement(){
+        float moveH = Input.GetAxis("Horizontal");
+        float moveV = Input.GetAxis("Vertical");
+        Vector3 movePos = new Vector3(moveH, 0, moveV);
+        transform.position = transform.position + movePos * moveSpeed * Time.deltaTime;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if(!isLocalPlayer)
+            return;
         
+        Movement();
     }
 }
