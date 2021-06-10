@@ -18,6 +18,12 @@ public class Player : NetworkBehaviour
     Vector3 forwardDir;
     Transform bulletPrefab;
     Laser laser;
+    Weapon weapon;
+    Animator animator;
+
+    // [SerializeField]
+    // Value to rotate the body around
+    float rotateBody;
 
     private void Start() {
         body = GetComponentInChildren<Rigidbody>();
@@ -27,6 +33,9 @@ public class Player : NetworkBehaviour
         main = GetComponentInChildren<Camera>();
         bulletPrefab = GameAssets.i.bulletPrefab;
         laser = GetComponentInChildren<Laser>(true);
+        weapon = GetComponentInChildren<Weapon>();
+        rotateBody = 35f;
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Movement(){
@@ -38,18 +47,31 @@ public class Player : NetworkBehaviour
         // Debug.Log("MovePos: "+movePos);
         body.MovePosition(body.transform.position + movePos);
 
-        if(movePos.magnitude > 0 && !isAiming){
+        if(movePos.magnitude > 0){
             Quaternion forwardsRotation = Quaternion.LookRotation(movePos);
+            forwardsRotation.eulerAngles += new Vector3(0,rotateBody,0);
             body.MoveRotation(forwardsRotation);
             // Debug.Log("forwardsRotation: "+forwardsRotation.eulerAngles);
+
+            // Debug.Log("Weapon Forward: "+weapon.transform.forward);
+            if(weapon.transform.forward.z != 0){
+                animator.SetBool("isWalkingForward", true);
+            }
         }
+        else
+            animator.SetBool("isWalkingForward", false);
     }
 
     void Aim(){
         isAiming = Input.GetButton("Aim");
         if(isAiming){
-            startPos = body.transform.position;
-            forwardDir = body.transform.TransformDirection(Vector3.forward);
+            animator.SetBool("isWalkingForward", false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+            // startPos = body.transform.position;
+            startPos = weapon.transform.position;
+            // forwardDir = body.transform.TransformDirection(Vector3.forward);
+            // forwardDir = weapon.transform.TransformDirection(Vector3.forward);
             // Vector3 endPos = body.transform.position + forwardDir * 10;
             // Debug.DrawLine(startPos, endPos,Color.red);
 
@@ -64,19 +86,26 @@ public class Player : NetworkBehaviour
                 Debug.DrawLine(startPos, worldPos);
                 laser.gameObject.SetActive(true);
                 body.transform.LookAt(worldPos);
+                body.transform.Rotate(new Vector3(0,rotateBody,0));
             }
         }
         else{
-            laser.gameObject.SetActive(false);
+            if(laser.gameObject.activeSelf){
+                laser.gameObject.SetActive(false);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                BroadcastMessage("isFiring", false);
+            }
         }
     }
 
     void Fire(){
         bool isFiring = Input.GetButtonDown("Fire1");
         if(isFiring && isAiming){
-            Debug.Log("Fire!");
-            Transform bullet = Instantiate(bulletPrefab, startPos, Quaternion.LookRotation(forwardDir));
-            Physics.IgnoreCollision(bullet.GetComponent<Collider>(), body.GetComponent<Collider>(), true);
+            // Debug.Log("Fire!");
+            // Transform bullet = Instantiate(bulletPrefab, startPos, Quaternion.LookRotation(forwardDir));
+            // Physics.IgnoreCollision(bullet.GetComponent<Collider>(), body.GetComponent<Collider>(), true);
+            BroadcastMessage("isFiring", true);
         }
     }
 
@@ -85,7 +114,8 @@ public class Player : NetworkBehaviour
         if(!isLocalPlayer)
             return;
         
-        Movement();
+        if(!isAiming)
+            Movement();
         
         Fire();
     }
