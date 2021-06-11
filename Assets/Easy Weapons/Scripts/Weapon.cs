@@ -799,27 +799,32 @@ public class Weapon : MonoBehaviour
 		}
 
 		// Recoil
-		if (recoil)
-			Recoil();
+		// if (recoil)
+		// 	Recoil();
 		
 		// Muzzle flash effects
-		if (makeMuzzleEffects)
-		{
-			GameObject muzfx = muzzleEffects[Random.Range(0, muzzleEffects.Length)];
-			if (muzfx != null)
-				Instantiate(muzfx, muzzleEffectsPosition.position, muzzleEffectsPosition.rotation);
-		}
+		// if (makeMuzzleEffects)
+		// {
+		// 	GameObject muzfx = muzzleEffects[Random.Range(0, muzzleEffects.Length)];
+		// 	if (muzfx != null){
+		// 		GameObject muzzle = Instantiate(muzfx, muzzleEffectsPosition.position, muzzleEffectsPosition.rotation);
+		// 		// NetworkServer.Spawn(muzzle);
+		// 	}
+		// }
 
 		// Instantiate shell props
-		if (spitShells)
-		{
-			GameObject shellGO = Instantiate(shell, shellSpitPosition.position, shellSpitPosition.rotation) as GameObject;
-			shellGO.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(shellSpitForce + Random.Range(0, shellForceRandom), 0, 0), ForceMode.Impulse);
-			shellGO.GetComponent<Rigidbody>().AddRelativeTorque(new Vector3(shellSpitTorqueX + Random.Range(-shellTorqueRandom, shellTorqueRandom), shellSpitTorqueY + Random.Range(-shellTorqueRandom, shellTorqueRandom), 0), ForceMode.Impulse);
-		}
+		// if (spitShells)
+		// {
+		// 	GameObject shellGO = Instantiate(shell, shellSpitPosition.position, shellSpitPosition.rotation) as GameObject;
+		// 	shellGO.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(shellSpitForce + Random.Range(0, shellForceRandom), 0, 0), ForceMode.Impulse);
+		// 	shellGO.GetComponent<Rigidbody>().AddRelativeTorque(new Vector3(shellSpitTorqueX + Random.Range(-shellTorqueRandom, shellTorqueRandom), shellSpitTorqueY + Random.Range(-shellTorqueRandom, shellTorqueRandom), 0), ForceMode.Impulse);
+		// 	// NetworkServer.Spawn(shellGO);
+		// }
 
 		// Play the gunshot sound
-		GetComponent<AudioSource>().PlayOneShot(fireSound);
+		// GetComponent<AudioSource>().PlayOneShot(fireSound);
+		
+		SendMessageUpwards("CmdSpawnBullets");
 	}
 
 	// Projectile system
@@ -1091,7 +1096,7 @@ public class Weapon : MonoBehaviour
 
 
 	// Recoil FX.  This is the "kick" that you see when the weapon moves back while firing
-	void Recoil()
+	public void Recoil()
 	{
 		// No recoil for AIs
 		if (!playerWeapon)

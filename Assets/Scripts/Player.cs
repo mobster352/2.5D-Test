@@ -126,4 +126,35 @@ public class Player : NetworkBehaviour
 
         Aim();
     }
+
+    [Command]
+	void CmdSpawnBullets(){
+		Debug.Log("Here");
+		// Recoil
+		if (weapon.recoil)
+			weapon.Recoil();
+		
+		// Muzzle flash effects
+		if (weapon.makeMuzzleEffects)
+		{
+			GameObject muzfx = weapon.muzzleEffects[Random.Range(0, weapon.muzzleEffects.Length)];
+			if (muzfx != null){
+				GameObject muzzle = Instantiate(muzfx, weapon.muzzleEffectsPosition.position, weapon.muzzleEffectsPosition.rotation);
+				NetworkServer.Spawn(muzzle);
+			}
+		}
+
+		// Instantiate shell props
+		if (weapon.spitShells)
+		{
+			GameObject shellGO = Instantiate(weapon.shell, weapon.shellSpitPosition.position, weapon.shellSpitPosition.rotation) as GameObject;
+			shellGO.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(weapon.shellSpitForce + Random.Range(0, weapon.shellForceRandom), 0, 0), ForceMode.Impulse);
+			shellGO.GetComponent<Rigidbody>().AddRelativeTorque(new Vector3(weapon.shellSpitTorqueX + Random.Range(-weapon.shellTorqueRandom, weapon.shellTorqueRandom), weapon.shellSpitTorqueY + Random.Range(-weapon.shellTorqueRandom, weapon.shellTorqueRandom), 0), ForceMode.Impulse);
+			NetworkServer.Spawn(shellGO);
+		}
+
+		// Play the gunshot sound
+		weapon.GetComponent<AudioSource>().PlayOneShot(weapon.fireSound);
+	}
+
 }
