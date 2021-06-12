@@ -793,7 +793,7 @@ public class Weapon : MonoBehaviour
 				// Add force to the object that was hit
 				if (hit.rigidbody)
 				{
-					hit.rigidbody.AddForce(ray.direction * power * forceMultiplier);
+					// hit.rigidbody.AddForce(ray.direction * power * forceMultiplier);
 				}
 			}
 		}

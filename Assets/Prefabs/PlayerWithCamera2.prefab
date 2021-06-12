@@ -134,13 +134,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4171930630185514824}
-  m_LocalRotation: {x: 0.21489665, y: -0, z: -0, w: 0.97663677}
-  m_LocalPosition: {x: 0, y: 3.71, z: -6.64}
+  m_LocalRotation: {x: 0.5162991, y: -0, z: -0, w: 0.8564083}
+  m_LocalPosition: {x: 0, y: 5.42, z: -2.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1930110678382550602}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 24.819, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 62.169, y: 0, z: 0}
 --- !u!20 &8741510016260932287
 Camera:
   m_ObjectHideFlags: 0
@@ -212,16 +212,16 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4762339402499556962}
   serializedVersion: 2
-  m_Mass: 50
+  m_Mass: 10
   m_Drag: 0
-  m_AngularDrag: 10
+  m_AngularDrag: 1e+37
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
-  m_CollisionDetection: 3
---- !u!65 &5062302148036123147
-BoxCollider:
+  m_CollisionDetection: 1
+--- !u!136 &1555356461937782443
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -230,9 +230,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.8670977, y: 1.7903345, z: 0.5207796}
-  m_Center: {x: 0.013418108, y: 0.8875171, z: 0.029541016}
+  m_Radius: 0.2756847
+  m_Height: 1.8341752
+  m_Direction: 1
+  m_Center: {x: -0.0064361393, y: 0.8741277, z: 0.029965103}
 --- !u!1001 &863345227782541749
 PrefabInstance:
   m_ObjectHideFlags: 0

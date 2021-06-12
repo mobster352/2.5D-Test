@@ -24,6 +24,8 @@ public class Player : NetworkBehaviour
     // [SerializeField]
     // Value to rotate the body around
     float rotateBody;
+    bool canOpen;
+    Door currentDoor;
 
     private void Start() {
         body = GetComponentInChildren<Rigidbody>();
@@ -36,6 +38,7 @@ public class Player : NetworkBehaviour
         weapon = GetComponentInChildren<Weapon>();
         rotateBody = 35f;
         animator = GetComponentInChildren<Animator>();
+        canOpen = false;
     }
 
     void Movement(){
@@ -118,6 +121,10 @@ public class Player : NetworkBehaviour
             Movement();
         
         Fire();
+
+        if(canOpen && Input.GetButtonDown("Use")){
+            currentDoor.OpenDoor();
+        }
     }
 
     private void FixedUpdate() {
@@ -129,7 +136,7 @@ public class Player : NetworkBehaviour
 
     [Command]
 	void CmdSpawnBullets(){
-		Debug.Log("Here");
+		// Debug.Log("Here");
 		// Recoil
 		if (weapon.recoil)
 			weapon.Recoil();
@@ -156,5 +163,10 @@ public class Player : NetworkBehaviour
 		// Play the gunshot sound
 		weapon.GetComponent<AudioSource>().PlayOneShot(weapon.fireSound);
 	}
+
+    public void CanOpenDoor(bool canOpen, Door door){
+        this.canOpen = canOpen;
+        currentDoor = door;
+    }
 
 }
