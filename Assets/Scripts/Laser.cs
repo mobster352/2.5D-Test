@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Laser : MonoBehaviour {
-    private LineRenderer lr;
+    public LineRenderer lr;
 	// Use this for initialization
 
     private void Awake() {
@@ -21,7 +21,9 @@ public class Laser : MonoBehaviour {
         {
             if (hit.collider)
             {
-                lr.SetPosition(1, hit.point);
+                Vector3 hitPoint = hit.point;
+                // hitPoint.y = lr.GetPosition(0).y;
+                lr.SetPosition(1, hitPoint);
             }
         }
         else lr.SetPosition(1, transform.forward*5000);

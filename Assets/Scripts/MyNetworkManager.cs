@@ -62,20 +62,27 @@ public class MyNetworkManager : NetworkManager
             return;
         }
 
-        Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
+        // Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
         
-        Debug.Log("Player Index: "+index);
+        // Debug.Log("Player Index: "+index);
         players.Add(conn.connectionId, index);
+
         Transform startPos = playerSpawns[index];
         GameObject thePlayerPrefab = playerPrefabs[index];
-            GameObject player = startPos != null
-                ? Instantiate(thePlayerPrefab, startPos.position, startPos.rotation)
-                : Instantiate(thePlayerPrefab);
 
-            // instantiating a "Player" prefab gives it the name "Player(clone)"
-            // => appending the connectionId is WAY more useful for debugging!
-            player.name = $"{thePlayerPrefab.name} [connId={conn.connectionId}]";
-            NetworkServer.AddPlayerForConnection(conn, player);
+        GameObject player = startPos != null
+            ? Instantiate(thePlayerPrefab, startPos.position, startPos.rotation)
+            : Instantiate(thePlayerPrefab);
+
+        if(index==0)
+            ServerAssets.i.player1 = player;
+        else
+            ServerAssets.i.player2 = player;
+
+        // instantiating a "Player" prefab gives it the name "Player(clone)"
+        // => appending the connectionId is WAY more useful for debugging!
+        player.name = $"{thePlayerPrefab.name} [connId={conn.connectionId}]";
+        NetworkServer.AddPlayerForConnection(conn, player);
 
         index++;
     }
@@ -93,6 +100,6 @@ public class MyNetworkManager : NetworkManager
             else
                 indexP2 = 0;
         }
-        Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
+        // Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
     }
 }

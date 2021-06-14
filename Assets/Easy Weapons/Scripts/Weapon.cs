@@ -211,6 +211,7 @@ public class Weapon : MonoBehaviour
 
 
 	NetworkIdentity networkIdentity;
+	Laser laser;
 
 	// Use this for initialization
 	void Start()
@@ -281,6 +282,8 @@ public class Weapon : MonoBehaviour
 		}
 
 		networkIdentity = GetComponentInParent<NetworkIdentity>();
+
+		laser = GetComponentInChildren<Laser>();
 	}
 	
 	// Update is called once per frame
@@ -610,12 +613,12 @@ public class Weapon : MonoBehaviour
 			// Calculate accuracy for this shot
 			float accuracyVary = (100 - currentAccuracy) / 1000;
 			Vector3 direction = raycastStartSpot.forward;
-			direction.x += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
-			direction.y += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
-			direction.z += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
-			currentAccuracy -= accuracyDropPerShot;
-			if (currentAccuracy <= 0.0f)
-				currentAccuracy = 0.0f;
+			// direction.x += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
+			// direction.y += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
+			// direction.z += UnityEngine.Random.Range(-accuracyVary, accuracyVary);
+			// currentAccuracy -= accuracyDropPerShot;
+			// if (currentAccuracy <= 0.0f)
+			// 	currentAccuracy = 0.0f;
 
 			// The ray that will be used for this shot
 			Ray ray = new Ray(raycastStartSpot.position, direction);

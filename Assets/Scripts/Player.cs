@@ -5,6 +5,7 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
+    // [SerializeField]
     float moveSpeed;
     [SerializeField]
     LayerMask layerMask;
@@ -30,7 +31,7 @@ public class Player : NetworkBehaviour
     private void Start() {
         body = GetComponentInChildren<Rigidbody>();
         isAiming = false;
-        moveSpeed = 20f;
+        moveSpeed = 4f;
         _rotationSpeed = 10f;
         main = GetComponentInChildren<Camera>();
         bulletPrefab = GameAssets.i.bulletPrefab;
@@ -117,26 +118,50 @@ public class Player : NetworkBehaviour
         if(!isLocalPlayer)
             return;
         
-        if(!isAiming)
-            Movement();
-        
         Fire();
 
         if(canOpen && Input.GetButtonDown("Use")){
-            currentDoor.OpenDoor();
+            CmdOpenDoor();
         }
+    }
+
+    [Command]
+    public void CmdOpenDoor(){
+        RpcOpenDoor();
+
+        currentDoor.OpenDoor();
+    }
+
+    [ClientRpc]
+    public void RpcOpenDoor(){
+        currentDoor.OpenDoor();
     }
 
     private void FixedUpdate() {
         if(!isLocalPlayer)
             return;
 
+        if(!isAiming)
+            Movement();
+
         Aim();
     }
 
     [Command]
 	void CmdSpawnBullets(){
-		// Debug.Log("Here");
+		RpcPlayWeaponFireSound();
+
+        SpawnBullets();
+	}
+
+    [ClientRpc]
+    void RpcPlayWeaponFireSound(){
+        weapon.GetComponent<AudioSource>().PlayOneShot(weapon.fireSound);
+    }
+
+    [Server]
+    void SpawnBullets(){
+        // Debug.Log("Here");
 		// Recoil
 		if (weapon.recoil)
 			weapon.Recoil();
@@ -161,8 +186,8 @@ public class Player : NetworkBehaviour
 		}
 
 		// Play the gunshot sound
-		weapon.GetComponent<AudioSource>().PlayOneShot(weapon.fireSound);
-	}
+		// weapon.GetComponent<AudioSource>().PlayOneShot(weapon.fireSound);
+    }
 
     public void CanOpenDoor(bool canOpen, Door door){
         this.canOpen = canOpen;
