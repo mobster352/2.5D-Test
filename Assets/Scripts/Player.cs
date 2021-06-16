@@ -26,7 +26,10 @@ public class Player : NetworkBehaviour
     // Value to rotate the body around
     float rotateBody;
     bool canOpen;
-    Door currentDoor;
+    [SyncVar]
+    Door currentDoor = new Door();
+    bool ammoPickupInRange;
+    GameObject ammo;
 
     private void Start() {
         body = GetComponentInChildren<Rigidbody>();
@@ -40,6 +43,8 @@ public class Player : NetworkBehaviour
         rotateBody = 35f;
         animator = GetComponentInChildren<Animator>();
         canOpen = false;
+        ammoPickupInRange = false;
+        currentDoor = FindObjectOfType<Door>();
     }
 
     void Movement(){
@@ -121,7 +126,18 @@ public class Player : NetworkBehaviour
         Fire();
 
         if(canOpen && Input.GetButtonDown("Use")){
+            // Debug.Log("CanOpen: "+canOpen);
             CmdOpenDoor();
+        }
+
+        if(ammoPickupInRange && Input.GetButtonDown("Use")){
+            ammoPickupInRange = false;
+            Debug.Log("AmmoInRange");
+            weapon.maxAmmo += weapon.ammoCapacity;
+            weapon.UpdateAmmo();
+            // Destroy(ammo);
+            NetworkServer.Destroy(ammo);
+            // NetworkServer.UnSpawn(ammo);
         }
     }
 
@@ -129,12 +145,18 @@ public class Player : NetworkBehaviour
     public void CmdOpenDoor(){
         RpcOpenDoor();
 
-        currentDoor.OpenDoor();
+        if(currentDoor != null)
+            currentDoor.OpenDoor();
+        else
+            Debug.Log("CurrentDoor is null: Server/"+isServer);
     }
 
     [ClientRpc]
     public void RpcOpenDoor(){
-        currentDoor.OpenDoor();
+        if(currentDoor != null)
+            currentDoor.OpenDoor();
+        else
+            Debug.Log("CurrentDoor is null: Client"+isLocalPlayer);
     }
 
     private void FixedUpdate() {
@@ -192,6 +214,15 @@ public class Player : NetworkBehaviour
     public void CanOpenDoor(bool canOpen, Door door){
         this.canOpen = canOpen;
         currentDoor = door;
+    }
+
+    public void AmmoPickupInRange(GameObject ammo){
+        ammoPickupInRange = true;
+        this.ammo = ammo;
+    }
+
+    public void AmmoPickupOutOfRange(){
+        ammoPickupInRange = false;
     }
 
 }

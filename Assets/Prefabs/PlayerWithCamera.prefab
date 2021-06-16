@@ -294,6 +294,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4744813215635060270, guid: 0c6f12ff0d3fbb84686eaec7f2532933, type: 3}
+      propertyPath: ammoCapacity
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744813215635060270, guid: 0c6f12ff0d3fbb84686eaec7f2532933, type: 3}
+      propertyPath: infiniteAmmo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744813215635060270, guid: 0c6f12ff0d3fbb84686eaec7f2532933, type: 3}
+      propertyPath: showCurrentAmmo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744813215635060270, guid: 0c6f12ff0d3fbb84686eaec7f2532933, type: 3}
       propertyPath: makeMuzzleEffects
       value: 1
       objectReference: {fileID: 0}

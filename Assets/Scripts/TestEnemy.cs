@@ -7,15 +7,19 @@ using Mirror;
 public class TestEnemy : NetworkBehaviour
 {
     [SyncVar]
-    int hp = 5;
+    int hp;
     Animator animator;
     AstarAI astarAI;
     Collider col;
+    int hitLayer;
 
     private void Start() {
         animator = GetComponent<Animator>();
         astarAI = GetComponent<AstarAI>();
         col = GetComponent<Collider>();
+
+        hp = Random.Range(3,6);
+        hitLayer = animator.GetLayerIndex("Hit Layer");
     }
 
     [Command(requiresAuthority = false)]
@@ -25,15 +29,25 @@ public class TestEnemy : NetworkBehaviour
 
         if(hp > 0){
             animator.SetTrigger("hit");
+            animator.SetLayerWeight(hitLayer, 1);
+
             RpcSetTriggerAnim("hit");
+            RpcSetLayerWeight(hitLayer, 1);
         }
 
         if(hp <= 0){
             Destroy(astarAI);
             Destroy(col);
             RpcChangeHealth();
-            animator.SetTrigger("dead");
-            RpcSetTriggerAnim("dead");
+
+            animator.SetLayerWeight(hitLayer, 0);
+            RpcSetLayerWeight(hitLayer, 0);
+
+            // animator.SetTrigger("deadTrig");
+            // RpcSetTriggerAnim("deadTrig");
+            animator.SetBool("dead", true);
+            RpcSetBoolAnim("dead", true);
+            
             StartCoroutine("WaitDead", 30);
         }
     }
@@ -47,6 +61,16 @@ public class TestEnemy : NetworkBehaviour
     [ClientRpc]
     void RpcSetTriggerAnim(string name){
         animator.SetTrigger(name);
+    }
+    
+    [ClientRpc]
+    void RpcSetBoolAnim(string name, bool val){
+        animator.SetBool(name, val);
+    }
+
+    [ClientRpc]
+    void RpcSetLayerWeight(int layerIndex, float weight){
+        animator.SetLayerWeight(layerIndex, weight);
     }
 
     IEnumerator WaitDead(float time){

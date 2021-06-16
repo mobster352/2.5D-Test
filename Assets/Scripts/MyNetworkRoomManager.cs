@@ -64,8 +64,13 @@ public class MyNetworkRoomManager: NetworkRoomManager
     {
         Debug.Log("OnRoomServerCreateGamePlayer");
 
-        if(index > 1)
-            index = 0;
+        Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
+
+        if(index > 1){
+            indexP1 = 0;
+        }
+
+        Debug.Log($"indexP1: {indexP1} / indexP2: {indexP2}");
 
         if(indexP1 == 0){
             index = 0;

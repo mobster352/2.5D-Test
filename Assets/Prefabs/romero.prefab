@@ -1899,6 +1899,8 @@ GameObject:
   - component: {fileID: 8944823865461723575}
   - component: {fileID: 8944823865461723572}
   - component: {fileID: 8944823865461723573}
+  - component: {fileID: 919132148299046334}
+  - component: {fileID: 919132148299046335}
   m_Layer: 0
   m_Name: romero
   m_TagString: Untagged
@@ -1985,6 +1987,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e48ecef95d70014ebd66dd87e132a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &8944823865461723572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1997,15 +2001,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617ac10a2759dfa459cecdb9b344c371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   targetPosition: {fileID: 0}
-  speed: 0.7
+  speed: 1
   nextWaypointDistance: 3
   reachedEndOfPath: 0
   waitingForNextMove: 0
   reachedRoamDistance: 0.5
   reachedPlayerDistance: 0.5
   stopChaseDistance: 5
-  attackRange: 1.5
+  attackRange: 1.2
   rotationSpeed: 3
 --- !u!114 &8944823865461723573
 MonoBehaviour:
@@ -2035,6 +2041,43 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &919132148299046334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134358788174488835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
+--- !u!114 &919132148299046335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134358788174488835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  animator: {fileID: 3263122088830576067}
 --- !u!1 &8191865355721029911
 GameObject:
   m_ObjectHideFlags: 0

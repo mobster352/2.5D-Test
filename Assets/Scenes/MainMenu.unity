@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   port: 7777
-  NoDelay: 1
+  NoDelay: 0
   SendTimeout: 5000
   ReceiveTimeout: 30000
   serverMaxMessageSize: 16384
@@ -847,10 +847,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
-  PersistNetworkManagerToOfflineScene: 0
+  PersistNetworkManagerToOfflineScene: 1
   runInBackground: 1
   autoStartServerBuild: 1
-  serverTickRate: 30
+  serverTickRate: 60
   serverBatching: 1
   serverBatchInterval: 0
   offlineScene: Assets/Scenes/MainMenu.unity

@@ -177,6 +177,7 @@ public class AstarAI : NetworkBehaviour
 
                 case State.ChaseTarget:
                 // Debug.Log("Here2");
+
                     float playerTooFarFromOrigin = 2f;
                     if(!pathToPlayer || Vector3.Distance(newPlayerPos, playerPos) > playerTooFarFromOrigin){
                         pathToPlayer = true;
@@ -243,6 +244,7 @@ public class AstarAI : NetworkBehaviour
     void AttackPlayerState(){
         if(Time.time > nextAttackTime){
             //stop moving
+            animator.SetBool("walking", false);
             animator.SetTrigger("attack");
             //can attack every 4 seconds
             float attackRate = 4f;

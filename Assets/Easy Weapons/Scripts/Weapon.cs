@@ -18,6 +18,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using TMPro;
 
 public enum WeaponType
 {
@@ -138,6 +139,7 @@ public class Weapon : MonoBehaviour
 	private int currentAmmo;							// How much ammo the weapon currently has
 	public float reloadTime = 2.0f;						// How much time it takes to reload the weapon
 	public bool showCurrentAmmo = true;					// Whether or not the current ammo should be displayed in the GUI
+	public int maxAmmo = 24;							// Max ammo for the weapon
 	public bool reloadAutomatically = true;				// Whether or not the weapon should reload automatically when out of ammo
 
 	// Accuracy
@@ -212,6 +214,8 @@ public class Weapon : MonoBehaviour
 
 	NetworkIdentity networkIdentity;
 	Laser laser;
+	GameObject ammoHud;
+	TextMeshProUGUI ammoText;
 
 	// Use this for initialization
 	void Start()
@@ -284,6 +288,21 @@ public class Weapon : MonoBehaviour
 		networkIdentity = GetComponentInParent<NetworkIdentity>();
 
 		laser = GetComponentInChildren<Laser>();
+
+		ammoHud = GameObject.FindGameObjectWithTag("AmmoHUD");
+		ammoText = ammoHud.GetComponent<TextMeshProUGUI>();
+
+		// Ammo Display
+		if (showCurrentAmmo)
+		{
+			// ammoText.gameObject.SetActive(true);
+			if (type == WeaponType.Raycast || type == WeaponType.Projectile)
+				// GUI.Label(new Rect(10, Screen.height - 30, 100, 20), "Ammo: " + currentAmmo + " / " + maxAmmo);
+				// ammoText.SetText(currentAmmo+" / "+maxAmmo);
+				ammoText.text = currentAmmo+" / "+maxAmmo;
+		}
+		else
+			ammoText.gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -308,7 +327,7 @@ public class Weapon : MonoBehaviour
 		}
 
 		// Reload if the weapon is out of ammo
-		if (reloadAutomatically && currentAmmo <= 0)
+		if (reloadAutomatically && currentAmmo <= 0 && maxAmmo <= 0)
 			Reload();
 
 		// Recoil Recovery
@@ -532,6 +551,9 @@ public class Weapon : MonoBehaviour
 		Beam();
 	}
 
+	public void UpdateAmmo(){
+		ammoText.text = currentAmmo+" / "+maxAmmo;
+	}
 
 	void OnGUI()
 	{
@@ -561,14 +583,17 @@ public class Weapon : MonoBehaviour
 			GUI.DrawTexture(bottomRect, crosshairTexture, ScaleMode.StretchToFill);
 		}
 
-		// Ammo Display
-		if (showCurrentAmmo)
-		{
-			if (type == WeaponType.Raycast || type == WeaponType.Projectile)
-				GUI.Label(new Rect(10, Screen.height - 30, 100, 20), "Ammo: " + currentAmmo);
-			else if (type == WeaponType.Beam)
-				GUI.Label(new Rect(10, Screen.height - 30, 100, 20), "Heat: " + (int)(beamHeat * 100) + "/" + (int)(maxBeamHeat * 100));
-		}
+		// // Ammo Display
+		// if (showCurrentAmmo)
+		// {
+		// 	ammoText.gameObject.SetActive(true);
+		// 	if (type == WeaponType.Raycast || type == WeaponType.Projectile)
+		// 		// GUI.Label(new Rect(10, Screen.height - 30, 100, 20), "Ammo: " + currentAmmo + " / " + maxAmmo);
+		// 		ammoText.text = currentAmmo+" / "+maxAmmo;
+				
+		// 	else if (type == WeaponType.Beam)
+		// 		GUI.Label(new Rect(10, Screen.height - 30, 100, 20), "Heat: " + (int)(beamHeat * 100) + "/" + (int)(maxBeamHeat * 100));
+		// }
 	}
 
 	bool firing = false;
@@ -596,6 +621,7 @@ public class Weapon : MonoBehaviour
 			canFire = false;
 
 		// First make sure there is ammo
+		// if (currentAmmo <= 0)
 		if (currentAmmo <= 0)
 		{
 			DryFire();
@@ -606,6 +632,7 @@ public class Weapon : MonoBehaviour
 		if (!infiniteAmmo)
 			currentAmmo--;
 
+		ammoText.text = currentAmmo+" / "+maxAmmo;
 
 		// Fire once for each shotPerRound value
 		for (int i = 0; i < shotPerRound; i++)
@@ -1083,7 +1110,18 @@ public class Weapon : MonoBehaviour
 	// Reload the weapon
 	void Reload()
 	{
-		currentAmmo = ammoCapacity;
+		int tempAmmo = ammoCapacity - currentAmmo;
+		if(maxAmmo - tempAmmo < 0){
+			currentAmmo = maxAmmo;
+			maxAmmo = 0;
+		}
+		else{
+			maxAmmo -= tempAmmo;
+			currentAmmo = ammoCapacity;
+		}
+
+		ammoText.text = currentAmmo+" / "+maxAmmo;
+
 		fireTimer = -reloadTime;
 		GetComponent<AudioSource>().PlayOneShot(reloadSound);
 
